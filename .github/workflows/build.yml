@@ -27,7 +27,7 @@ jobs:
       
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: |
@@ -50,7 +50,7 @@ jobs:
           echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
       
       - name: Upload JaCoCo coverage report (aggregate)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: jacoco-report
           path: cui4j-spring-boot-starter/target/site/jacoco-aggregate/
