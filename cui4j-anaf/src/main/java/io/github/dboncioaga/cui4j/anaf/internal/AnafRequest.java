@@ -16,7 +16,6 @@
 package io.github.dboncioaga.cui4j.anaf.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 

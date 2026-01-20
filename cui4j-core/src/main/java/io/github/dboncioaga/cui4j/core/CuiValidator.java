@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
  * A CUI is the unique identification code used by Romanian companies and organizations.
  * It can optionally be prefixed with "RO" for VAT purposes (making it a VAT identification number).
  */
+@FunctionalInterface
 public interface CuiValidator {
 
     /**

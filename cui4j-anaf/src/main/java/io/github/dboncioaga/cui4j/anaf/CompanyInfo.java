@@ -18,7 +18,6 @@ package io.github.dboncioaga.cui4j.anaf;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Company information retrieved from ANAF.

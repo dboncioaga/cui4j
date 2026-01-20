@@ -25,6 +25,7 @@ module io.github.dboncioaga.cui4j.anaf {
     requires static transitive org.jspecify;
     requires spring.web;
     requires spring.beans;
+    requires spring.core;
     requires com.fasterxml.jackson.annotation;
     requires org.slf4j;
 

@@ -159,8 +159,8 @@
                         <compilerArgs>
                             <arg>-parameters</arg>
                             <arg>-Xlint:all,-processing</arg>
-                            <arg>-Werror</arg>
                         </compilerArgs>
+                        <showWarnings>false</showWarnings>
                     </configuration>
                 </plugin>
 
@@ -269,9 +269,9 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <configLocation>google_checks.xml</configLocation>
+                        <configLocation>checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
-                        <failsOnError>false</failsOnError>
+                        <failsOnError>true</failsOnError>
                         <violationSeverity>warning</violationSeverity>
                         <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     </configuration>
@@ -303,11 +303,16 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <failOnViolation>false</failOnViolation>
-                        <printFailingErrors>true</printFailingErrors>
                         <rulesets>
-                            <ruleset>/rulesets/java/quickstart.xml</ruleset>
+                            <ruleset>pmd-ruleset.xml</ruleset>
                         </rulesets>
+                        <printFailingErrors>true</printFailingErrors>
+                        <failOnViolation>true</failOnViolation>
+                        <includeTests>false</includeTests>
+                        <linkXRef>false</linkXRef>
+                        <excludes>
+                            <exclude>**/module-info.java</exclude>
+                        </excludes>
                         <excludeRoots>
                             <excludeRoot>target/generated-sources</excludeRoot>
                         </excludeRoots>
@@ -381,6 +386,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

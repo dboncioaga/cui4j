@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(Cui4jProperties.class)
 public class Cui4jAutoConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(Cui4jAutoConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Cui4jAutoConfiguration.class);
 
     /**
      * Provides a CUI validator bean.
@@ -53,7 +53,7 @@ public class Cui4jAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CuiValidator cuiValidator() {
-        log.info("Configuring CUI4J validator");
+        LOG.info("Configuring CUI4J validator");
         return new DefaultCuiValidator();
     }
 
@@ -77,8 +77,8 @@ public class Cui4jAutoConfiguration {
     public AnafClient anafClient(Cui4jProperties properties) {
         Cui4jProperties.Anaf anafConfig = properties.getAnaf();
         
-        log.info("Configuring CUI4J ANAF client with base URL: {}", anafConfig.getBaseUrl());
-        log.debug("ANAF configuration: timeout={}ms, maxRetries={}, maxBatchSize={}", 
+        LOG.info("Configuring CUI4J ANAF client with base URL: {}", anafConfig.getBaseUrl());
+        LOG.debug("ANAF configuration: timeout={}ms, maxRetries={}, maxBatchSize={}", 
             anafConfig.getTimeout().toMillis(),
             anafConfig.getMaxRetries(),
             anafConfig.getMaxBatchSize());

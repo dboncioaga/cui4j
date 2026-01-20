@@ -54,7 +54,7 @@ public final class DefaultCuiValidator implements CuiValidator {
         String normalized = input.replaceAll("[\\s\\-_./]", "");
         
         // Check for RO prefix
-        boolean hasVatPrefix = normalized.toUpperCase().startsWith(VAT_PREFIX);
+        boolean hasVatPrefix = normalized.toUpperCase(java.util.Locale.ROOT).startsWith(VAT_PREFIX);
         if (hasVatPrefix) {
             normalized = normalized.substring(VAT_PREFIX.length());
         }
@@ -114,10 +114,12 @@ public final class DefaultCuiValidator implements CuiValidator {
         
         // Calculate expected control digit
         int product = sum * 10;
-        int expectedControl = product % 11;
+        int remainder = product % 11;
+        int expectedControl = remainder;
         
         // Special case: if result is 10, the control digit should be 0
-        if (expectedControl == 10) {
+        final int specialCase = 10;
+        if (remainder == specialCase) {
             expectedControl = 0;
         }
         

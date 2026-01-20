@@ -15,12 +15,18 @@
  */
 package io.github.dboncioaga.cui4j.anaf;
 
-import io.github.dboncioaga.cui4j.anaf.internal.*;
+import io.github.dboncioaga.cui4j.anaf.internal.AnafCompanyData;
+import io.github.dboncioaga.cui4j.anaf.internal.AnafGeneralData;
+import io.github.dboncioaga.cui4j.anaf.internal.AnafNotFoundData;
+import io.github.dboncioaga.cui4j.anaf.internal.AnafRequest;
+import io.github.dboncioaga.cui4j.anaf.internal.AnafResponse;
 import io.github.dboncioaga.cui4j.core.CuiValidator;
 import io.github.dboncioaga.cui4j.core.DefaultCuiValidator;
 import io.github.dboncioaga.cui4j.core.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
@@ -29,6 +35,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -44,17 +51,49 @@ import java.util.stream.Collectors;
  */
 public final class DefaultAnafClient implements AnafClient {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultAnafClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultAnafClient.class);
     
-    private static final String DEFAULT_ANAF_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v9/ws/tva";
-    private static final int DEFAULT_MAX_BATCH_SIZE = 500;
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
-    private static final int DEFAULT_MAX_RETRIES = 2;
+    // Hardcoded fallback defaults (used if properties file cannot be loaded)
+    private static final String FALLBACK_ANAF_URL = "https://webservicesp.anaf.ro/PlatitorTvaRest/api/v9/ws/tva";
+    private static final int FALLBACK_MAX_BATCH_SIZE = 500;
+    private static final int FALLBACK_TIMEOUT_SECONDS = 10;
+    private static final int FALLBACK_MAX_RETRIES = 2;
+    
+    private static final Properties DEFAULTS = loadDefaults();
+    
+    private static final String DEFAULT_ANAF_URL = DEFAULTS.getProperty("anaf.url", FALLBACK_ANAF_URL);
+    private static final int DEFAULT_MAX_BATCH_SIZE = Integer.parseInt(
+        DEFAULTS.getProperty("anaf.maxBatchSize", String.valueOf(FALLBACK_MAX_BATCH_SIZE))
+    );
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(
+        Long.parseLong(DEFAULTS.getProperty("anaf.timeout", String.valueOf(FALLBACK_TIMEOUT_SECONDS)))
+    );
+    private static final int DEFAULT_MAX_RETRIES = Integer.parseInt(
+        DEFAULTS.getProperty("anaf.maxRetries", String.valueOf(FALLBACK_MAX_RETRIES))
+    );
 
     private final RestClient restClient;
     private final CuiValidator cuiValidator;
     private final int maxBatchSize;
     private final int maxRetries;
+
+    /**
+     * Loads default configuration from properties file using Spring's PropertiesLoaderUtils.
+     * Falls back to empty properties if loading fails (hardcoded defaults will be used).
+     *
+     * @return properties with default values, or empty properties if loading fails
+     */
+    private static Properties loadDefaults() {
+        try {
+            ClassPathResource resource = new ClassPathResource("anaf-defaults.properties");
+            Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+            LOG.debug("Loaded ANAF defaults from properties file");
+            return properties;
+        } catch (Exception e) {
+            LOG.warn("Failed to load anaf-defaults.properties, using hardcoded defaults", e);
+            return new Properties();
+        }
+    }
 
     /**
      * Creates a new ANAF client with default configuration.
@@ -97,7 +136,7 @@ public final class DefaultAnafClient implements AnafClient {
 
     @Override
     public CompanyInfo lookup(String cui) {
-        log.debug("Looking up CUI: {}", cui);
+        LOG.debug("Looking up CUI: {}", cui);
         
         List<CompanyInfo> results = lookupBatch(List.of(cui));
         return results.getFirst();
@@ -115,7 +154,7 @@ public final class DefaultAnafClient implements AnafClient {
             );
         }
 
-        log.debug("Looking up {} CUIs in batch", cuis.size());
+        LOG.debug("Looking up {} CUIs in batch", cuis.size());
         
         // Validate and normalize CUIs
         Map<Long, String> normalizedCuis = cuis.stream()
@@ -146,7 +185,7 @@ public final class DefaultAnafClient implements AnafClient {
         for (int attempt = 0; attempt <= maxRetries; attempt++) {
             try {
                 if (attempt > 0) {
-                    log.warn("Retrying ANAF request, attempt {}/{}", attempt, maxRetries);
+                    LOG.warn("Retrying ANAF request, attempt {}/{}", attempt, maxRetries);
                     Thread.sleep(backoffMillis);
                     backoffMillis = Math.min(backoffMillis * 2, 2000); // Exponential backoff, max 2s
                 }
@@ -169,12 +208,15 @@ public final class DefaultAnafClient implements AnafClient {
             } catch (Exception e) {
                 lastException = e;
                 if (attempt == maxRetries) {
-                    log.error("Failed to query ANAF API after {} attempts", maxRetries + 1, e);
+                    LOG.error("Failed to query ANAF API after {} attempts", maxRetries + 1, e);
                 }
             }
         }
 
-        throw new AnafClientException("Failed to query ANAF API after " + (maxRetries + 1) + " attempts", lastException);
+        throw new AnafClientException(
+            "Failed to query ANAF API after " + (maxRetries + 1) + " attempts",
+            lastException
+        );
     }
 
     private long validateAndNormalizeCui(String cui) {
@@ -241,7 +283,7 @@ public final class DefaultAnafClient implements AnafClient {
         try {
             return LocalDate.parse(dateStr);
         } catch (Exception e) {
-            log.warn("Failed to parse date: {}", dateStr);
+            LOG.warn("Failed to parse date: {}", dateStr);
             return null;
         }
     }
