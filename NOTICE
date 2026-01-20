@@ -1,0 +1,103 @@
+Romanian CUI/CIF Validation and ANAF Integration SDK
+Copyright 2026 Daniel Boncioaga
+
+This product includes software developed at
+https://github.com/dboncioaga/cui4j
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+================================================================================
+
+This product includes the following third-party dependencies:
+
+JSpecify (org.jspecify:jspecify:1.0.0)
+  * License: Apache License 2.0
+  * Homepage: https://jspecify.dev/
+  * Copyright (c) JSpecify Authors
+
+Spring Framework (org.springframework:spring-web:6.2.1)
+  * License: Apache License 2.0
+  * Homepage: https://spring.io/projects/spring-framework
+  * Copyright (c) Spring Framework Authors
+
+Spring Boot (org.springframework.boot:spring-boot-autoconfigure:4.0.1)
+  * License: Apache License 2.0
+  * Homepage: https://spring.io/projects/spring-boot
+  * Copyright (c) Spring Boot Authors
+
+Jackson Databind (tools.jackson.core:jackson-databind:3.0.3)
+  * License: Apache License 2.0
+  * Homepage: https://github.com/FasterXML/jackson-databind
+  * Copyright (c) FasterXML, LLC
+
+SLF4J API (org.slf4j:slf4j-api:2.0.16)
+  * License: MIT License
+  * Homepage: https://www.slf4j.org/
+  * Copyright (c) QOS.ch
+
+JUnit Jupiter (org.junit:junit-bom:6.0.2) [Test Only]
+  * License: Eclipse Public License 2.0
+  * Homepage: https://junit.org/junit5/
+  * Copyright (c) JUnit Team
+
+AssertJ (org.assertj:assertj-core:3.27.3) [Test Only]
+  * License: Apache License 2.0
+  * Homepage: https://assertj.github.io/doc/
+  * Copyright (c) AssertJ Authors
+
+WireMock (org.wiremock:wiremock:3.11.0) [Test Only]
+  * License: Apache License 2.0
+  * Homepage: https://wiremock.org/
+  * Copyright (c) WireMock Authors
+
+================================================================================
+
+Data Sources:
+
+The Romanian CUI/CIF validation algorithm is based on:
+- Romanian Tax Code (Codul Fiscal al României)
+- ANAF (Agenția Națională de Administrare Fiscală) specifications
+- Official Romanian government regulations
+
+ANAF API Integration:
+This software integrates with the ANAF (Romanian National Agency for 
+Fiscal Administration) public TVA REST API to query company tax 
+information. The API endpoint and data structures are based on official 
+ANAF documentation.
+
+CUI/CIF Validation:
+The validation algorithm implements the official Romanian checksum 
+calculation as specified by ANAF for validating Cod Unic de Identificare 
+(CUI) and Cod de Identificare Fiscală (CIF) numbers.
+
+================================================================================
+
+Attribution:
+
+This library was developed to provide accurate Romanian CUI/CIF validation 
+and ANAF API integration for Java applications. It is provided "as is" 
+without warranty of any kind, express or implied.
+
+For the most accurate and up-to-date tax registration information, please 
+consult official ANAF sources at https://www.anaf.ro/
+
+================================================================================
+
+Third-Party Notices:
+
+This software may include code or algorithms inspired by or derived from 
+publicly available sources. All such code is used in compliance with the 
+respective licenses and with appropriate attribution.
+
+For questions or concerns regarding licensing, please open an issue at:
+https://github.com/dboncioaga/cui4j/issues
