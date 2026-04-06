@@ -58,7 +58,7 @@
         <junit.version>6.0.3</junit.version>
         <snakeyaml.version>2.5</snakeyaml.version>
         <assertj.version>3.27.7</assertj.version>
-        <mockito.version>5.22.0</mockito.version>
+        <mockito.version>5.23.0</mockito.version>
         <wiremock.version>3.13.2</wiremock.version>
 
         <!-- Plugin versions -->
